@@ -1,5 +1,5 @@
 import asyncio
-
+import mysql.connector
 import kopf
 
 VERSION = "v1"
@@ -12,6 +12,14 @@ async def startup(logger, **kwargs):
 
 @kopf.on.create('bukwp.kopfmysql', 'v1', 'accounts')
 def create_1(body, meta, spec, status, **kwargs):
-    kopf.info(body, reason='AnyReason')
-    kopf.event(body, type='Warning', reason='SomeReason', message="Cannot do something")
+
+    try:
+        cnx = mysql.connector.connect(
+            user='root',
+            password='password',
+            host=spec['service']
+        )
+        cnx.close()
+    except Exception:
+        kopf.event(body, type='Warning', reason='SomeReason', message="Cannot connect to mysql")
     return {'job1-status': 100}
