@@ -1,0 +1,19 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql.account.wp.gowno.space
+  namespace: wordpress
+stringData:
+  login: "test-account"
+  password: "test-password"
+---
+apiVersion: bukwp.kopfmysql/v1
+kind: Account
+metadata:
+  name: mysql.account.wp.gowno.space
+  namespace: wordpress
+spec:
+  service: wordpress.mysql
+  secret: mysql.account.wp.gowno.space
+---
