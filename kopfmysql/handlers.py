@@ -21,6 +21,6 @@ def create_1(body, meta, spec, status, **kwargs):
             host=spec['service']
         )
         cnx.close()
-    except Exception:
-        kopf.warn(f"Failed connecting to mysql at {spec['service']}")
+    except Exception as err:
+        kopf.warn(f"Failed connecting to mysql at {spec['service']}, {err}")
     return {'job1-status': 100}
