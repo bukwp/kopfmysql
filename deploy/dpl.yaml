@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: "bukwp.kopfmysql"
+  name: "bukwp-kopfmysql"
   namespace: "bukwp-kopfmysql"
 spec:
   replicas: 1
@@ -15,9 +15,8 @@ spec:
       labels:
         app: kopfmysql-operator
     spec:
-      serviceAccountName: "bukwp.kopfmysql"
+      serviceAccountName: "bukwp-kopfmysql-serviceacc"
       containers:
         - name: kopfmysql-operator
           imagePullPolicy: Always
           image: quay.io/bukowwp/kopfmysql:dev
-

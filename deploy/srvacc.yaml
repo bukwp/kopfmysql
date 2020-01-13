@@ -2,28 +2,35 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   namespace: "bukwp-kopfmysql"
-  name: "bukwp.kopfmysql"
+  name: "bukwp-kopfmysql-serviceacc"
 ---
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
 metadata:
-  name: "bukwp.kopfmysql"
+  name: "bukwp-kopfmysql-clusterrole"
 rules:
   - apiGroups: [bukwp.kopfmysql]
     resources: [accounts]
-    verbs: [get, list, watch]
+    verbs: [get, list, watch, patch]
+  # Framework: posting the events about the handlers progress/errors.
+  - apiGroups: [events.k8s.io]
+    resources: [events]
+    verbs: [create]
+  - apiGroups: [""]
+    resources: [events]
+    verbs: [create]
 ---
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
-  name: "bukwp.kopfmysql"
+  name: "bukwp-kopfmysql-clusterrolebinding"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: "bukwp.kopfmysql"
+  name: "bukwp-kopfmysql-clusterrole"
 subjects:
   - kind: ServiceAccount
-    name: "bukwp.kopfmysql"
+    name: "bukwp-kopfmysql-serviceacc"
     namespace: "bukwp-kopfmysql"
 
 #apiVersion: rbac.authorization.k8s.io/v1beta1
