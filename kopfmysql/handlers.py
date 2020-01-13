@@ -1,8 +1,6 @@
 import asyncio
 
 import kopf
-from kubernetes import client, config
-
 
 VERSION = "v1"
 
