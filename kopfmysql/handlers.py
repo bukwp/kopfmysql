@@ -28,7 +28,7 @@ def create_1(body, meta, spec, status, **kwargs):
 
 
 @kopf.on.update('bukwp.kopfmysql', 'v1', 'accounts')
-def create_1(body, meta, spec, status, **kwargs):
+def update_1(body, meta, spec, status, **kwargs):
 
     try:
         kopf.info(body, reason="OK", message=f"Connecting to mysql at {spec['service']}")
