@@ -12,8 +12,9 @@ async def startup(logger, **kwargs):
 
 
 def main(body, meta, spec, status, **kwargs):
+
     try:
-        kopf.info(body, reason="OK", message=f"Connecting to mysql at {spec['service']}")
+        kopf.info(body, reason="CONNECTING", message=f"Connecting to mysql at {spec['service']}")
         cnx = mysql.connector.connect(
             user='root',
             password='password',
@@ -21,8 +22,10 @@ def main(body, meta, spec, status, **kwargs):
         )
         kopf.info(body, reason="OK", message=f"Connected to mysql at {spec['service']}")
         cnx.close()
+
     except Exception as err:
-        kopf.info(body, reason="OK", message=f"Failed connecting to mysql at {spec['service']}, {err}")
+        kopf.info(body, reason="ERROR", message=f"{err}")
+
     return {'job1-status': 100}
 
 
