@@ -16,11 +16,12 @@ async def startup(logger, **kwargs):
 def main(body, meta, spec, status, **kwargs):
 
     v1 = kubernetes.client.CoreV1Api()
-
-    kopf.info(body, reason="SECREt", message=v1.read_namespaced_secret(
+    
+    secret = v1.read_namespaced_secret(
         name=spec['secret'],
         namespace=meta['namespace'],
-    ))
+    )
+    kopf.info(body, reason="SECREt", message=secret.data)
 
     try:
         kopf.info(body, reason="CONNECTING", message=f"Connecting to mysql at {spec['service']}")
