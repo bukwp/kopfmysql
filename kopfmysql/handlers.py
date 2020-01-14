@@ -42,3 +42,8 @@ def update_1(body, meta, spec, status, **kwargs):
 @kopf.on.resume('bukwp.kopfmysql', 'v1', 'accounts')
 def resume_1(body, meta, spec, status, **kwargs):
     return main(body, meta, spec, status, **kwargs)
+
+
+@kopf.on.delete('bukwp.kopfmysql', 'v1', 'accounts')
+def resume_1(body, meta, spec, status, **kwargs):
+    return main(body, meta, spec, status, **kwargs)

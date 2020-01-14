@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  namespace: "bukwp-kopfmysql"
+  namespace: "wordpress"
   name: "bukwp-kopfmysql-serviceacc"
 ---
 apiVersion: rbac.authorization.k8s.io/v1beta1
@@ -31,7 +31,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: "bukwp-kopfmysql-serviceacc"
-    namespace: "bukwp-kopfmysql"
+    namespace: "wordpress"
 
 #apiVersion: rbac.authorization.k8s.io/v1beta1
 #kind: Role
