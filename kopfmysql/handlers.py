@@ -1,6 +1,7 @@
 import asyncio
 import mysql.connector
 import kopf
+import kubernetes
 
 VERSION = "v1"
 
@@ -11,7 +12,15 @@ async def startup(logger, **kwargs):
     await asyncio.sleep(1)
 
 
+
 def main(body, meta, spec, status, **kwargs):
+
+    v1 = kubernetes.client.CoreV1Api()
+
+    kopf.info(body, reason="SECREt", message=v1.read_namespaced_secret(
+        name=spec['secret'],
+        namespace=meta['namespace'],
+    ))
 
     try:
         kopf.info(body, reason="CONNECTING", message=f"Connecting to mysql at {spec['service']}")
