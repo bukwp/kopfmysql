@@ -13,7 +13,9 @@ kind: Account
 metadata:
   name: "mysql.account.wp.gowno.space"
   namespace: "bukwp-kopfmysql"
+  annotations:
+    dpl: asd
 spec:
-  service: wordpress.mysql
+  service: wordpress.mysql.svc.local
   secret: mysql.account.wp.gowno.space
 ---
