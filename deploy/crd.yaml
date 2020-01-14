@@ -24,6 +24,9 @@ spec:
                   type: string
                 secret:
                   type: string
+              required:
+                - service
+                - secret
   # either Namespaced or Cluster
   scope: Namespaced
   names:
