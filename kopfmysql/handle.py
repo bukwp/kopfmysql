@@ -38,6 +38,7 @@ def main(body, meta, spec, status, **kwargs):
 
     for k, v in secret.data.items():
         print(f"name: {k} value {v} type {type(v)}")
+        print(f"name: {k} value {b64decode(v)} type {type(b64decode(v))}")
     handler = AccountHandler(
         host=MYSQL_HOST,
         port=MYSQL_PORT,
