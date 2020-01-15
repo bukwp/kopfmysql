@@ -1,11 +1,12 @@
 import asyncio
 import logging
 import os
-from .handler import AccountHandler
-import mysql.connector
+from base64 import b64decode
+
 import kopf
 import kubernetes
-from base64 import b64decode
+
+from .handler import AccountHandler
 
 VERSION = "v1alpha"
 
