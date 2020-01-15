@@ -51,6 +51,7 @@ def main(body, meta, spec, status, **kwargs):
 
     except Exception as exc:
         kopf.exception(body, reason="ERROR", exc=exc)
+        raise kopf.PermanentError()
 
     return {'job1-status': 100}
 
