@@ -6,12 +6,12 @@ from base64 import b64decode
 import kopf
 import kubernetes
 
-from .handler import AccountHandler
+from app.handler import AccountHandler
 
 VERSION = "v1alpha"
 
-MYSQL_USER = os.environ['MYSQL_ROOT_USER']
-MYSQL_PASSWORD = os.environ['MYSQL_ROOT_PASSWORD']
+MYSQL_ROOT_USER = os.environ['MYSQL_ROOT_USER']
+MYSQL_ROOT_PASSWORD = os.environ['MYSQL_ROOT_PASSWORD']
 MYSQL_HOST = os.environ['MYSQL_HOST']
 MYSQL_PORT = os.environ['MYSQL_PORT']
 
@@ -25,7 +25,6 @@ async def startup(logger, **kwargs):
 
 
 def main(body, meta, spec, status, **kwargs):
-    
     v1 = kubernetes.client.CoreV1Api()
 
     secret = v1.read_namespaced_secret(
@@ -40,8 +39,8 @@ def main(body, meta, spec, status, **kwargs):
     handler = AccountHandler(
         host=MYSQL_HOST,
         port=MYSQL_PORT,
-        user=MYSQL_USER,
-        password=MYSQL_PASSWORD,
+        user=MYSQL_ROOT_USER,
+        password=MYSQL_ROOT_PASSWORD,
         user_create=b64decode(secret.data['login']),
         password_create=b64decode(secret.data['password']),
         database_create=b64decode(secret.data['password']),

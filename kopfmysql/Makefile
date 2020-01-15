@@ -19,6 +19,16 @@ run-ls:
 	kopfmysql:${VERSION} \
 	/bin/bash -c "ls"
 
+test-command:
+	-docker run \
+	--rm \
+	-e MYSQL_ROOT_USER=test \
+	-e MYSQL_ROOT_PASSWORD=test \
+	-e MYSQL_HOST=test \
+	-e MYSQL_PORT=test \
+	kopfmysql:${VERSION} \
+	--verbose
+
 docker-test:
 	docker run \
 	--rm \

@@ -8,5 +8,6 @@ WORKDIR /app
 COPY requirements.txt /app
 RUN pip install -r requirements.txt
 
-COPY /app /app
-ENTRYPOINT ["kopf", "run", "main.py"]
+COPY . /app
+ENTRYPOINT ["kopf", "run", "handle.py"]
+CMD []
