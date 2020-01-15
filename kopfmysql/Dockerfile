@@ -4,6 +4,7 @@ RUN apt-get update && apt-get upgrade
 RUN apt-get install wait-for-it
 
 WORKDIR /app
+
 COPY requirements.txt /app
 RUN pip install -r requirements.txt
 

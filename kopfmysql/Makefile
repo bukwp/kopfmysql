@@ -12,13 +12,20 @@ build:
 	--tag=kopfmysql:${VERSION} \
 	.
 
+run-ls:
+	docker run \
+	--rm \
+	--entrypoint="" \
+	kopfmysql:${VERSION} \
+	/bin/bash -c "ls"
+
 docker-test:
 	docker run \
 	--rm \
 	--entrypoint="" \
 	--network="${MYSQL_NAME}" \
 	kopfmysql:${VERSION} \
-	wait-for-it ${MYSQL_NAME}:3306 && python -m unittest -v
+	wait-for-it ${MYSQL_NAME}:3306 -t 30 && python -m unittest -v
 
 run-mysql: create-network
 	docker run \
