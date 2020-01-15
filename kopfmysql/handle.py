@@ -39,24 +39,27 @@ def main(body, meta, spec, status, **kwargs):
     for k, v in secret.data.items():
         kopf.info(body, reason="WTF", message=f"name: {k} value {v} type {type(v)}")
         kopf.info(body, reason="WTF", message=f"name: {k} value {b64decode(v)} type {type(b64decode(v))}")
-    handler = AccountHandler(
-        host=MYSQL_HOST,
-        port=MYSQL_PORT,
-        user=MYSQL_ROOT_USER,
-        password=MYSQL_ROOT_PASSWORD,
-        user_create=b64decode(secret.data['login']),
-        password_create=b64decode(secret.data['password']),
-        database_create=b64decode(secret.data['database']),
-    )
 
-    kopf.info(body, reason="ACCOUNTS", message=f"Handling account for {meta['name']}")
+    try:
+        handler = AccountHandler(
+            host=MYSQL_HOST,
+            port=MYSQL_PORT,
+            user=MYSQL_ROOT_USER,
+            password=MYSQL_ROOT_PASSWORD,
+            user_create=b64decode(secret.data['login']),
+            password_create=b64decode(secret.data['password']),
+            database_create=b64decode(secret.data['database']),
+        )
 
-    handler.create_user()
-    handler.create_database()
-    handler.grant_permissions()
+        kopf.info(body, reason="ACCOUNTS", message=f"Handling account for {meta['name']}")
 
-    kopf.info(body, reason="ACCOUNTS", message=f"Handled account for {meta['name']}")
+        handler.create_user()
+        handler.create_database()
+        handler.grant_permissions()
 
+        kopf.info(body, reason="ACCOUNTS", message=f"Handled account for {meta['name']}")
+    except Exception as err:
+        kopf.TemporaryError(err.__repr__())
     return {'job1-status': 100}
 
 
