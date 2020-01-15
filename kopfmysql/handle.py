@@ -2,7 +2,8 @@ import asyncio
 import logging
 import os
 from base64 import b64decode
-
+from mysql.connector.errorcode import CR_CONN_HOST_ERROR
+from mysql.connector.errors import Error as MysqlError
 import kopf
 import kubernetes
 
@@ -49,6 +50,10 @@ def main(body, meta, spec, status, **kwargs):
 
         kopf.info(body, reason="SUCCESS", message=f"Handled account for {meta['name']}")
 
+    except MysqlError as exc:
+        if exc.errno == CR_CONN_HOST_ERROR:
+            kopf.exception(body, reason="ERROR", exc=exc)
+            raise kopf.TemporaryError(delay=15)
     except Exception as exc:
         kopf.exception(body, reason="ERROR", exc=exc)
         raise kopf.PermanentError()
