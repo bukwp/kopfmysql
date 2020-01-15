@@ -57,15 +57,15 @@ def main(body, meta, spec, status, **kwargs):
 
 
 @kopf.on.create('bukwp.kopfmysql', 'v1', 'accounts')
-def create_1(body, meta, spec, status, **kwargs):
+async def create_1(body, meta, spec, status, **kwargs):
     return main(body, meta, spec, status, **kwargs)
 
 
 @kopf.on.update('bukwp.kopfmysql', 'v1', 'accounts')
-def update_1(body, meta, spec, status, **kwargs):
+async def update_1(body, meta, spec, status, **kwargs):
     return main(body, meta, spec, status, **kwargs)
 
 
 @kopf.on.resume('bukwp.kopfmysql', 'v1', 'accounts')
-def resume_1(body, meta, spec, status, **kwargs):
+async def resume_1(body, meta, spec, status, **kwargs):
     return main(body, meta, spec, status, **kwargs)
