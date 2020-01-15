@@ -51,12 +51,14 @@ def main(body, meta, spec, status, **kwargs):
         kopf.info(body, reason="SUCCESS", message=f"Handled account for {meta['name']}")
 
     except MysqlError as exc:
+        kopf.exception(body, reason="ERROR", exc=exc)
         if exc.errno == CR_CONN_HOST_ERROR:
-            kopf.exception(body, reason="ERROR", exc=exc)
-            raise kopf.TemporaryError(delay=15)
+            raise kopf.TemporaryError(delay=15, __msg=exc.__repr__())
+        else:
+            raise kopf.PermanentError(exc.__repr__())
     except Exception as exc:
         kopf.exception(body, reason="ERROR", exc=exc)
-        raise kopf.PermanentError()
+        raise kopf.PermanentError(exc.__repr__())
 
     return {'job1-status': 100}
 
