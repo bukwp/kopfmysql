@@ -1,5 +1,5 @@
 MYSQL_NAME=bukwp-kopfmysql-mysql-test
-VERSION=v1alpha
+VERSION=v1alpha1
 
 .EXPORT_ALL_VARIABLES:
 MSYS2_ARG_CONV_EXCL = /bin/sh;/bin/bash;/var/run/docker

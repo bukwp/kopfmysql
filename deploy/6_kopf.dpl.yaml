@@ -19,7 +19,7 @@ spec:
       containers:
         - name: kopfmysql-operator
           imagePullPolicy: Always
-          image: quay.io/bukowwp/kopfmysql:v1alpha
+          image: quay.io/bukowwp/kopfmysql:v1alpha1
           command:
             - "--namespace wordpress"
             - "--verbose"

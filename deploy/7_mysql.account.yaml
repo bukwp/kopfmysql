@@ -9,7 +9,7 @@ stringData:
   password: "test-password"
   database: "test-database"
 ---
-apiVersion: bukwp.kopfmysql/v1alpha
+apiVersion: bukwp.kopfmysql/v1alpha1
 kind: Account
 metadata:
   name: "mysql-wp.gowno.space"

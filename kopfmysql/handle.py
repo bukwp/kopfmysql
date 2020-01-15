@@ -8,7 +8,7 @@ import kubernetes
 
 from app.handler import AccountHandler
 
-VERSION = "v1alpha"
+VERSION = "v1alpha1"
 
 MYSQL_ROOT_USER = os.environ['MYSQL_ROOT_USER']
 MYSQL_ROOT_PASSWORD = os.environ['MYSQL_ROOT_PASSWORD']
@@ -57,21 +57,21 @@ def main(body, meta, spec, status, **kwargs):
     return {'job1-status': 100}
 
 
-@kopf.on.create('bukwp.kopfmysql', 'v1alpha', 'accounts')
+@kopf.on.create('bukwp.kopfmysql', 'v1alpha1', 'accounts')
 def create_1(body, meta, spec, status, **kwargs):
     return main(body, meta, spec, status, **kwargs)
 
 
-@kopf.on.update('bukwp.kopfmysql', 'v1alpha', 'accounts')
+@kopf.on.update('bukwp.kopfmysql', 'v1alpha1', 'accounts')
 def update_1(body, meta, spec, status, **kwargs):
     return main(body, meta, spec, status, **kwargs)
 
 
-@kopf.on.resume('bukwp.kopfmysql', 'v1alpha', 'accounts')
+@kopf.on.resume('bukwp.kopfmysql', 'v1alpha1', 'accounts')
 def resume_1(body, meta, spec, status, **kwargs):
     return main(body, meta, spec, status, **kwargs)
 
 
-@kopf.on.delete('bukwp.kopfmysql', 'v1alpha', 'accounts')
+@kopf.on.delete('bukwp.kopfmysql', 'v1alpha1', 'accounts')
 def resume_1(body, meta, spec, status, **kwargs):
     return main(body, meta, spec, status, **kwargs)

@@ -1,4 +1,4 @@
-VERSION=v1alpha
+VERSION=v1alpha1
 
 deploy:
 	kubectl create -f . --save-config
