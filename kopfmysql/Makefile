@@ -4,19 +4,18 @@ VERSION=v1alpha
 .EXPORT_ALL_VARIABLES:
 MSYS2_ARG_CONV_EXCL = /bin/sh;/bin/bash;/var/run/docker
 
-test: delete-mysql run-mysql docker-test
-test1: docker-test
+test: delete-mysql run-mysql build docker-test
+test1: build docker-test
 
-docker-build:
+build:
 	docker build \
 	--tag=kopfmysql:${VERSION} \
 	.
 
-docker-test: docker-build
+docker-test:
 	docker run \
 	--rm \
 	--entrypoint="" \
-	--volume="/$${PWD}/app:/app" \
 	--network="${MYSQL_NAME}" \
 	kopfmysql:${VERSION} \
 	wait-for-it ${MYSQL_NAME}:3306 && python -m unittest -v

@@ -1,4 +1,4 @@
-name: test kubectl
+name: python test
 
 on:
   push:
@@ -8,6 +8,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - name: python
+
+    - name: build
+      run: make build
       working-directory: ./kopfmysql
-      run: make test
+
+    - name: run mysql
+      run: make run-mysql
+      working-directory: ./kopfmysql
+
+    - name: python
+      run: make test1
+      working-directory: ./kopfmysql
