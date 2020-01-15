@@ -1,3 +1,4 @@
+import os
 import random
 import string
 import time
@@ -10,6 +11,9 @@ from mysql.connector.errors import InterfaceError, DatabaseError, ProgrammingErr
 from .mysql_handler import AccountHandler
 
 
+MYSQL_HOST_TEST = os.environ.get('MYSQL_TEST_HOST', 'localhost')
+
+
 def random_string(k=30):
     return ''.join(random.choices(string.ascii_letters, k=k))
 
@@ -19,8 +23,8 @@ class TestMysqlHandler(unittest.TestCase):
         self.data = dict(
             user='root',
             password='password',
-            host='localhost',
-            port='8765',
+            host=MYSQL_HOST_TEST,
+            port='3306',
             user_create=random_string(),
             password_create='userpassword',
             database_create=random_string(),
@@ -67,7 +71,7 @@ class TestMysqlHandler(unittest.TestCase):
 
         with handler.cursor() as c:
             c.execute('SHOW DATABASES;')
-            databases = [r[0].decode('utf-8') for r in c]
+            databases = [r[0] for r in c]
             self.assertIn(data['database_create'], databases)
 
     def test_user_can_login_and_create_database(self):
@@ -84,7 +88,7 @@ class TestMysqlHandler(unittest.TestCase):
 
         with h.cursor() as c:
             c.execute('SHOW DATABASES;')
-            databases = [r[0].decode('utf-8') for r in c]
+            databases = [r[0] for r in c]
             self.assertEqual(2, len(databases))
 
         with h.cursor(database=data['database_create']) as c:
@@ -100,4 +104,3 @@ TABLE = (
     "  `d` date NOT NULL"
     ")"
 )
-
