@@ -36,6 +36,8 @@ def main(body, meta, spec, status, **kwargs):
 
     kopf.info(body, reason="ACCOUNTS", message=f"Creating acount handler for {meta['name']}")
 
+    for k, v in secret.data.items():
+        print(f"name: {k} value {v} type {type(v)}")
     handler = AccountHandler(
         host=MYSQL_HOST,
         port=MYSQL_PORT,
