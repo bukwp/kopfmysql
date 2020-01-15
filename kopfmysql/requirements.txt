@@ -1,3 +1,4 @@
 kopf==0.24
 kubernetes==10.0.1
 mysql-connector-python==8.0.19
+pytest==5.3.2

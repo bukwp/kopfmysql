@@ -4,8 +4,8 @@ VERSION=v1alpha
 .EXPORT_ALL_VARIABLES:
 MSYS2_ARG_CONV_EXCL = /bin/sh;/bin/bash;/var/run/docker
 
-test: delete-mysql run-mysql build docker-test
-test1: build docker-test
+test: delete-mysql run-mysql build wait-mysql docker-test
+test1: build wait-mysql docker-test
 
 build:
 	docker build \
@@ -24,18 +24,27 @@ docker-test:
 	--rm \
 	--entrypoint="" \
 	--network="${MYSQL_NAME}" \
+	-e MYSQL_TEST_HOST=${MYSQL_NAME} \
 	kopfmysql:${VERSION} \
-	wait-for-it ${MYSQL_NAME}:3306 -t 30 && python -m unittest -v
+	pytest -v
 
 run-mysql: create-network
 	docker run \
     --name=${MYSQL_NAME} \
     --network=${MYSQL_NAME} \
+    --expose=3000 \
     -d \
-    -p 8765:3306 \
     -e MYSQL_ROOT_PASSWORD="password" \
     quay.io/bukowwp/mysql:latest \
     --default-authentication-plugin=mysql_native_password
+
+wait-mysql:
+	docker run \
+	--rm \
+	--entrypoint="" \
+	--network="${MYSQL_NAME}" \
+	kopfmysql:${VERSION} \
+	wait-for-it ${MYSQL_NAME}:3306 -t 30
 
 create-network:
 	-docker network create ${MYSQL_NAME}
