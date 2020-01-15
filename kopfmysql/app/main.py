@@ -1,14 +1,20 @@
 import asyncio
+import logging
 import os
-
+from .handler import AccountHandler
 import mysql.connector
 import kopf
 import kubernetes
-import base64
+from base64 import b64decode
+
 VERSION = "v1alpha"
 
-MYSQL_USER = 'root'
+MYSQL_USER = os.environ['MYSQL_ROOT_USER']
 MYSQL_PASSWORD = os.environ['MYSQL_ROOT_PASSWORD']
+MYSQL_HOST = os.environ['MYSQL_HOST']
+MYSQL_PORT = os.environ['MYSQL_PORT']
+
+kopf.EventsConfig.events_loglevel = logging.ERROR
 
 
 @kopf.on.startup()
@@ -16,7 +22,7 @@ async def startup(logger, **kwargs):
     logger.info(f"Starting bukwp.kopfmysql/{VERSION}")
     await asyncio.sleep(1)
 
-kopf.adopt()
+
 def main(body, meta, spec, status, **kwargs):
     
     v1 = kubernetes.client.CoreV1Api()
@@ -28,19 +34,25 @@ def main(body, meta, spec, status, **kwargs):
 
     kopf.info(body, reason="SECRET", message=spec['secret'])
 
-    try:
+    kopf.info(body, reason="ACCOUNTS", message=f"Creating acount handler for {meta['name']}")
 
-        kopf.info(body, reason="CONNECTING", message=f"Connecting to mysql at {spec['service']}")
-        cnx = mysql.connector.connect(
-            user=MYSQL_USER,
-            password=MYSQL_PASSWORD,
-            host=spec['service']
-        )
-        kopf.info(body, reason="CONNECTED", message=f"Connected to mysql at {spec['service']}")
-        cnx.close()
+    handler = AccountHandler(
+        host=MYSQL_HOST,
+        port=MYSQL_PORT,
+        user=MYSQL_USER,
+        password=MYSQL_PASSWORD,
+        user_create=b64decode(secret.data['login']),
+        password_create=b64decode(secret.data['password']),
+        database_create=b64decode(secret.data['password']),
+    )
 
-    except Exception as err:
-        kopf.warn(body, reason="ERROR", message=f"{err}")
+    kopf.info(body, reason="ACCOUNTS", message=f"Handling account for {meta['name']}")
+
+    handler.create_user()
+    handler.create_database()
+    handler.grant_permissions()
+
+    kopf.info(body, reason="ACCOUNTS", message=f"Handled account for {meta['name']}")
 
     return {'job1-status': 100}
 

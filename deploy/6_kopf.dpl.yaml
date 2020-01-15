@@ -29,3 +29,18 @@ spec:
                 secretKeyRef:
                   name: mysql
                   key: "MYSQL_ROOT_PASSWORD"
+            - name: "MYSQL_ROOT_USER"
+              valueFrom:
+                secretKeyRef:
+                  name: mysql
+                  key: "MYSQL_ROOT_USER"
+            - name: "MYSQL_HOST"
+              valueFrom:
+                secretKeyRef:
+                  name: mysql
+                  key: "MYSQL_HOST"
+            - name: "MYSQL_PORT"
+              valueFrom:
+                secretKeyRef:
+                  name: mysql
+                  key: "MYSQL_PORT"
