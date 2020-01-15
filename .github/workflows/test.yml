@@ -18,10 +18,7 @@ jobs:
       run: make run-ls
       working-directory: ./kopfmysql
 
-    - name: run mysql
-      run: make run-mysql
+    - name: python
+      run: make test
       working-directory: ./kopfmysql
 
-    - name: python
-      run: make docker-test
-      working-directory: ./kopfmysql
