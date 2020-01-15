@@ -15,8 +15,6 @@ MYSQL_ROOT_PASSWORD = os.environ['MYSQL_ROOT_PASSWORD']
 MYSQL_HOST = os.environ['MYSQL_HOST']
 MYSQL_PORT = os.environ['MYSQL_PORT']
 
-kopf.EventsConfig.events_loglevel = logging.INFO
-
 
 @kopf.on.startup()
 async def startup(logger, **kwargs):
