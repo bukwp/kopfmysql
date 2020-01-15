@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: "mysql"
+  namespace: "wordpress"
+spec:
+  ports:
+  - port: 3306
+  selector:
+    app: mysql
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "mysql"
+  namespace: "wordpress"
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+# mysql:5.7.28
+# - image: mysql@sha256:47960a0280616cfab409e46d2891cbd3c98cb6c30ecf4d0821bcb1a18d441d8e
+# needs --ignore-db-dir=lost+found
+# see https://github.com/docker-library/mysql/issues/186#issuecomment-229480846
+      - image: mysql:8.0.18
+        name: mysql
+        env:
+          - name: "MYSQL_ROOT_PASSWORD"
+            valueFrom:
+              secretKeyRef:
+                name: mysql
+                key: "MYSQL_ROOT_PASSWORD"
+          - name: "MYSQL_USER"
+            valueFrom:
+              secretKeyRef:
+                name: mysql
+                key: "MYSQL_USER"
+          - name: "MYSQL_PASSWORD"
+            valueFrom:
+              secretKeyRef:
+                name: mysql
+                key: "MYSQL_PASSWORD"
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+          claimName: "mysql"

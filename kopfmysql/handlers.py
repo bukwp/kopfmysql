@@ -2,6 +2,7 @@ import asyncio
 import mysql.connector
 import kopf
 import kubernetes
+import base64
 
 VERSION = "v1"
 

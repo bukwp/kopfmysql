@@ -2,17 +2,17 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   namespace: "wordpress"
-  name: "bukwp-kopfmysql-serviceacc"
+  name: "bukwp-kopfmysql-serviceaccount"
 ---
 apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRole
+kind: Role
 metadata:
-  name: "bukwp-kopfmysql-clusterrole"
+  name: "bukwp-kopfmysql-role"
+  namespace: "wordpress"
 rules:
   - apiGroups: [bukwp.kopfmysql]
     resources: [accounts]
-    verbs: [get, list, watch, patch]
-  # Framework: posting the events about the handlers progress/errors.
+    verbs: [get, list, watch]
   - apiGroups: [events.k8s.io]
     resources: [events]
     verbs: [create]
@@ -24,16 +24,17 @@ rules:
     verbs: [get]
 ---
 apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRoleBinding
+kind: RoleBinding
 metadata:
-  name: "bukwp-kopfmysql-clusterrolebinding"
+  name: "bukwp-kopfmysql-rolebinding"
+  namespace: "wordpress"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: "bukwp-kopfmysql-clusterrole"
+  kind: Role
+  name: "bukwp-kopfmysql-role"
 subjects:
   - kind: ServiceAccount
-    name: "bukwp-kopfmysql-serviceacc"
+    name: "bukwp-kopfmysql-serviceaccount"
     namespace: "wordpress"
 
 #apiVersion: rbac.authorization.k8s.io/v1beta1

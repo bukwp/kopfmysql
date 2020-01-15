@@ -2,20 +2,19 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: "mysql.account.wp.gowno.space"
+  name: "mysql-wp.gowno.space"
   namespace: "wordpress"
 stringData:
   login: "test-account"
   password: "test-password"
+  database: "test-database"
 ---
 apiVersion: bukwp.kopfmysql/v1
 kind: Account
 metadata:
-  name: "mysql.account.wp.gowno.space"
+  name: "mysql-wp.gowno.space"
   namespace: "wordpress"
-  annotations:
-    dpl: asd1
 spec:
-  service: mysql
-  secret: mysql.account.wp.gowno.space
+  service: "mysql"
+  secret: "mysql-wp.gowno.space"
 ---

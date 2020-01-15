@@ -4,7 +4,7 @@ metadata:
   name: "bukwp-kopfmysql"
   namespace: "wordpress"
   annotations:
-    dpl: next11
+    dpl: 0.1
 spec:
   replicas: 1
   strategy:
@@ -17,9 +17,8 @@ spec:
       labels:
         app: kopfmysql-operator
     spec:
-      serviceAccountName: "bukwp-kopfmysql-serviceacc"
+      serviceAccountName: "bukwp-kopfmysql-serviceaccount"
       containers:
         - name: kopfmysql-operator
           imagePullPolicy: Always
           image: quay.io/bukowwp/kopfmysql:wip
-
