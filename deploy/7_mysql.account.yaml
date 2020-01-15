@@ -5,15 +5,17 @@ metadata:
   name: "mysql-wp.gowno.space"
   namespace: "wordpress"
 stringData:
-  login: "test-account"
-  password: "test-password"
-  database: "test-database"
+  login: "testaccount"
+  password: "testpassword"
+  database: "testdatabase"
 ---
 apiVersion: bukwp.kopfmysql/v1
 kind: Account
 metadata:
   name: "mysql-wp.gowno.space"
   namespace: "wordpress"
+  annotations:
+    wtf: wtf11ss1
 spec:
   service: "mysql"
   secret: "mysql-wp.gowno.space"
