@@ -15,7 +15,7 @@ MYSQL_ROOT_PASSWORD = os.environ['MYSQL_ROOT_PASSWORD']
 MYSQL_HOST = os.environ['MYSQL_HOST']
 MYSQL_PORT = os.environ['MYSQL_PORT']
 
-kopf.EventsConfig.events_loglevel = logging.ERROR
+kopf.EventsConfig.events_loglevel = logging.INFO
 
 
 @kopf.on.startup()
@@ -74,10 +74,5 @@ def update_1(body, meta, spec, status, **kwargs):
 
 
 @kopf.on.resume('bukwp.kopfmysql', 'v1', 'accounts')
-def resume_1(body, meta, spec, status, **kwargs):
-    return main(body, meta, spec, status, **kwargs)
-
-
-@kopf.on.delete('bukwp.kopfmysql', 'v1', 'accounts')
 def resume_1(body, meta, spec, status, **kwargs):
     return main(body, meta, spec, status, **kwargs)
