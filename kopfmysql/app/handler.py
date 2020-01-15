@@ -1,6 +1,8 @@
+from base64 import b64decode
 from contextlib import contextmanager
 from dataclasses import dataclass, field
 import mysql.connector
+import kubernetes
 
 
 class AbstractHandler:
@@ -44,14 +46,19 @@ class BaseConnectionHandler(AbstractHandler):
 
 @dataclass
 class AccountHandler(BaseConnectionHandler):
-    user_create: str
-    password_create: str
-    database_create: str
+    user_create: str = None
+    password_create: str = None
+    database_create: str = None
     auth_plugin: str = "mysql_native_password"
 
     CREATE_DATABASE: str = "CREATE DATABASE {name}"
     CREATE_USER: str = "CREATE USER '{name}'@'%' IDENTIFIED WITH {auth_plugin} BY '{password}'"
     GRANT_PERMISSIONS:str  = "GRANT ALL ON {database}.* TO '{user}'@'%'"
+
+    def update_from_secret(self, secret: kubernetes.client.models.V1Secret):
+        self.user_create = b64decode(secret.data['login']).decode('utf-8')
+        self.password_create = b64decode(secret.data['password']).decode('utf-8')
+        self.database_create = b64decode(secret.data['database']).decode('utf-8')
 
     def create_database(self):
         cmd = self.CREATE_DATABASE.format(

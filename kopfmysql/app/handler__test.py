@@ -3,8 +3,9 @@ import random
 import string
 import time
 import unittest
+from base64 import b64encode
 from copy import deepcopy
-
+from kubernetes.client.models import V1Secret
 from mysql.connector.errorcode import CR_SERVER_LOST
 from mysql.connector.errors import InterfaceError, DatabaseError, ProgrammingError
 
@@ -14,7 +15,7 @@ from .handler import AccountHandler
 MYSQL_HOST_TEST = os.environ.get('MYSQL_TEST_HOST', 'localhost')
 
 
-def random_string(k=30):
+def random_string(k=30) -> str:
     return ''.join(random.choices(string.ascii_letters, k=k))
 
 class TestMysqlHandler(unittest.TestCase):
@@ -54,6 +55,29 @@ class TestMysqlHandler(unittest.TestCase):
             password=data['password_create'],
         ))
         return data
+
+    def test_from_secret(self):
+        handler = AccountHandler(**self.data)
+        bstring = random_string()
+        bbyte = bstring.encode('utf-8')
+        b64byte = b64encode(bbyte)
+        handler.update_from_secret(
+            V1Secret(
+                data=dict(
+                    login=b64byte,
+                    password=b64byte,
+                    database=b64byte,
+                )
+            )
+        )
+        self.assertEqual(bstring, handler.password_create)
+        self.assertEqual(bstring, handler.database_create)
+        self.assertEqual(bstring, handler.user_create)
+
+        handler = AccountHandler(**self.data)
+        handler.create_user()
+        handler.create_database()
+        handler.grant_permissions()
 
     def test(self):
         data = deepcopy(self.data)
