@@ -18,7 +18,7 @@ async def startup(logger, **kwargs):
 
 kopf.adopt()
 def main(body, meta, spec, status, **kwargs):
-
+    
     v1 = kubernetes.client.CoreV1Api()
 
     secret = v1.read_namespaced_secret(
