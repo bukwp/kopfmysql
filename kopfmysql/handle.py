@@ -30,13 +30,7 @@ def main(body, meta, spec, status, **kwargs):
         namespace=meta['namespace'],
     )
 
-    kopf.info(body, reason="SECRET", message=spec['secret'])
-
-    kopf.info(body, reason="ACCOUNTS", message=f"Creating acount handler for {meta['name']}")
-
-    for k, v in secret.data.items():
-        kopf.info(body, reason="WTF", message=f"name: {k} value {v} type {type(v)}")
-        kopf.info(body, reason="WTF", message=f"name: {k} value {b64decode(v)} type {type(b64decode(v))}")
+    kopf.info(body, reason="ACCOUNTS", message=f"Creating account handler for {meta['name']}")
 
     try:
         handler = AccountHandler(
@@ -47,16 +41,16 @@ def main(body, meta, spec, status, **kwargs):
         )
         handler.update_from_secret(secret)
 
-        kopf.info(body, reason="ACCOUNTS", message=f"Handling account for {meta['name']}")
+        kopf.info(body, reason="HANDLING", message=f"Handling account for {meta['name']}")
 
         handler.create_user()
         handler.create_database()
         handler.grant_permissions()
 
-        kopf.info(body, reason="ACCOUNTS", message=f"Handled account for {meta['name']}")
+        kopf.info(body, reason="SUCCESS", message=f"Handled account for {meta['name']}")
 
     except Exception as exc:
-        kopf.exception(body, reason="ERROR", message=exc.__repr__())
+        kopf.exception(body, reason="ERROR", exc=exc)
 
     return {'job1-status': 100}
 
