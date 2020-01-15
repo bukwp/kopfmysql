@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "bukwp-kopfmysql"
+  namespace: "wordpress"
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: kopfmysql-operator
+  template:
+    metadata:
+      labels:
+        app: kopfmysql-operator
+    spec:
+      serviceAccountName: "bukwp-kopfmysql-serviceaccount"
+      containers:
+        - name: kopfmysql-operator
+          imagePullPolicy: Always
+          image: quay.io/bukowwp/kopfmysql:wip
+          command:
+            - "--namespace wordpress"
+            - "--verbose"
+          env:
+            - name: "MYSQL_ROOT_PASSWORD"
+              valueFrom:
+                secretKeyRef:
+                  name: mysql
+                  key: "MYSQL_ROOT_PASSWORD"
