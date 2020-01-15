@@ -1,4 +1,4 @@
-VERSION=v1
+VERSION=v1alpha
 
 docker-build:
 	docker build --tag=quay.io/bukwp/kopfmysql:${VERSION} ./kopfmysql

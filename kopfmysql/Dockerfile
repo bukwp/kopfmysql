@@ -1,8 +1,11 @@
 FROM python:3-slim
 
-WORKDIR /code
-COPY requirements.txt /code
+RUN apt-get update && apt-get upgrade
+RUN apt-get install wait-for-it
+
+WORKDIR /app
+COPY requirements.txt /app
 RUN pip install -r requirements.txt
 
-COPY . /code
+COPY /app /app
 ENTRYPOINT ["kopf", "run", "handlers.py"]
