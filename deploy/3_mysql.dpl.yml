@@ -16,6 +16,7 @@ metadata:
   name: "mysql"
   namespace: "wordpress"
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: mysql
@@ -27,11 +28,7 @@ spec:
         app: mysql
     spec:
       containers:
-# mysql:5.7.28
-# - image: mysql@sha256:47960a0280616cfab409e46d2891cbd3c98cb6c30ecf4d0821bcb1a18d441d8e
-# needs --ignore-db-dir=lost+found
-# see https://github.com/docker-library/mysql/issues/186#issuecomment-229480846
-      - image: mysql:8.0.18
+      - image: quay.io/bukowwp/mysql:latest
         name: mysql
         env:
           - name: "MYSQL_ROOT_PASSWORD"
@@ -39,16 +36,6 @@ spec:
               secretKeyRef:
                 name: mysql
                 key: "MYSQL_ROOT_PASSWORD"
-          - name: "MYSQL_USER"
-            valueFrom:
-              secretKeyRef:
-                name: mysql
-                key: "MYSQL_USER"
-          - name: "MYSQL_PASSWORD"
-            valueFrom:
-              secretKeyRef:
-                name: mysql
-                key: "MYSQL_PASSWORD"
         ports:
         - containerPort: 3306
           name: mysql
