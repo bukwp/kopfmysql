@@ -41,9 +41,9 @@ def main(body, meta, spec, status, **kwargs):
         port=MYSQL_PORT,
         user=MYSQL_ROOT_USER,
         password=MYSQL_ROOT_PASSWORD,
-        user_create=b64decode(secret.data['login']),
-        password_create=b64decode(secret.data['password']),
-        database_create=b64decode(secret.data['password']),
+        user_create=b64decode(secret.data['login'].decode('utf-8')),
+        password_create=b64decode(secret.data['password'].decode('utf-8')),
+        database_create=b64decode(secret.data['password'].decode('utf-8')),
     )
 
     kopf.info(body, reason="ACCOUNTS", message=f"Handling account for {meta['name']}")
