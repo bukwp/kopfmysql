@@ -5,4 +5,4 @@ COPY requirements.txt /code
 RUN pip install -r requirements.txt
 
 COPY . /code
-CMD ["kopf", "run", "handlers.py", "--verbose"]
+ENTRYPOINT ["kopf", "run", "handlers.py"]
