@@ -9,4 +9,4 @@ COPY requirements.txt /app
 RUN pip install -r requirements.txt
 
 COPY /app /app
-ENTRYPOINT ["kopf", "run", "handlers.py"]
+ENTRYPOINT ["kopf", "run", "main.py"]

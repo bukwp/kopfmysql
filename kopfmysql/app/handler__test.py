@@ -8,7 +8,7 @@ from copy import deepcopy
 from mysql.connector.errorcode import CR_SERVER_LOST
 from mysql.connector.errors import InterfaceError, DatabaseError, ProgrammingError
 
-from .mysql_handler import AccountHandler
+from .handler import AccountHandler
 
 
 MYSQL_HOST_TEST = os.environ.get('MYSQL_TEST_HOST', 'localhost')
