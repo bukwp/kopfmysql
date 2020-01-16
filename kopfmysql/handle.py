@@ -9,7 +9,7 @@ from mysql.connector.errors import Error as MysqlError
 from app.handler import AccountHandler
 from app.errors import handle_error
 
-VERSION = "v1"
+VERSION = "v1alpha1"
 
 MYSQL_ROOT_USER = os.environ['MYSQL_ROOT_USER']
 MYSQL_ROOT_PASSWORD = os.environ['MYSQL_ROOT_PASSWORD']
@@ -59,16 +59,16 @@ def main(body, meta, spec, status, **kwargs):
     return {'job1-status': 100}
 
 
-@kopf.on.create('bukwp.kopfmysql', 'v1', 'accounts')
+@kopf.on.create('bukwp.kopfmysql', VERSION, 'accounts')
 async def create_1(body, meta, spec, status, **kwargs):
     return main(body, meta, spec, status, **kwargs)
 
 
-@kopf.on.update('bukwp.kopfmysql', 'v1', 'accounts')
+@kopf.on.update('bukwp.kopfmysql', VERSION, 'accounts')
 async def update_1(body, meta, spec, status, **kwargs):
     return main(body, meta, spec, status, **kwargs)
 
 
-@kopf.on.resume('bukwp.kopfmysql', 'v1', 'accounts')
+@kopf.on.resume('bukwp.kopfmysql', VERSION, 'accounts')
 async def resume_1(body, meta, spec, status, **kwargs):
     return main(body, meta, spec, status, **kwargs)
