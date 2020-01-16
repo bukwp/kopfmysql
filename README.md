@@ -11,7 +11,7 @@ stringData:
   password: "testpassword"
   database: "testdatabase"
 ---
-apiVersion: bukwp.kopfmysql/v1
+apiVersion: bukwp.kopfmysql/v1alpha1
 kind: Account
 metadata:
   name: "mysql-account"

@@ -1,8 +1,10 @@
-VERSION=v1
+VERSION=v1alpha1
 
 deploy:
 	kubectl create -f . --save-config
 
+apply:
+	kubectl apply -f .
 context:
 	kubectl config set-context --current --namespace=wordpress
 
