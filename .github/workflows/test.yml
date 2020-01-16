@@ -12,14 +12,10 @@ jobs:
       run: make build
       working-directory: ./kopfmysql
 
-    - name: run ls
+    - name: bash
       run: make run-ls
       working-directory: ./kopfmysql
 
-    - name: python tests
+    - name: pytest
       run: make test
-      working-directory: ./kopfmysql
-
-    - name: command
-      run: make test-command
       working-directory: ./kopfmysql

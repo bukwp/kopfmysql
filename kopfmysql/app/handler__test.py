@@ -5,12 +5,12 @@ import time
 import unittest
 from base64 import b64encode
 from copy import deepcopy
+
 from kubernetes.client.models import V1Secret
 from mysql.connector.errorcode import CR_SERVER_LOST
-from mysql.connector.errors import InterfaceError, DatabaseError, ProgrammingError
+from mysql.connector.errors import InterfaceError, DatabaseError, ProgrammingError, Error
 
 from .handler import AccountHandler
-
 
 MYSQL_HOST_TEST = os.environ.get('MYSQL_TEST_HOST', 'localhost')
 

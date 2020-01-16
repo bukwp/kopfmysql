@@ -1,0 +1,17 @@
+version: '3.6'
+
+services:
+  kopfmysql:
+    build:
+      context: .
+    environment:
+      MYSQL_TEST_HOST: mysql
+    entrypoint: ""
+    command: pytest -v -s
+    volumes:
+      - ./:/app
+  mysql:
+    image: quay.io/bukowwp/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    command: --default-authentication-plugin=mysql_native_password

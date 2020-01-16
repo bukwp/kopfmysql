@@ -1,13 +1,13 @@
 import asyncio
-import logging
 import os
-from base64 import b64decode
-from mysql.connector.errorcode import CR_CONN_HOST_ERROR
-from mysql.connector.errors import Error as MysqlError
+
 import kopf
 import kubernetes
+from mysql.connector.errorcode import CR_CONN_HOST_ERROR, ER_CANNOT_USER
+from mysql.connector.errors import Error as MysqlError
 
 from app.handler import AccountHandler
+from app.errors import handle_error
 
 VERSION = "v1"
 
@@ -51,14 +51,9 @@ def main(body, meta, spec, status, **kwargs):
         kopf.info(body, reason="SUCCESS", message=f"Handled account for {meta['name']}")
 
     except MysqlError as exc:
-        kopf.exception(body, reason="ERROR", exc=exc)
-        if exc.errno == CR_CONN_HOST_ERROR:
-            # todo no retries happen
-            raise kopf.TemporaryError(exc.__repr__(), delay=5)
-        else:
-            raise kopf.PermanentError(exc.__repr__())
+        handle_error(exc)
+
     except Exception as exc:
-        kopf.exception(body, reason="ERROR", exc=exc)
         raise kopf.PermanentError(exc.__repr__())
 
     return {'job1-status': 100}
