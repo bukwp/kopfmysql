@@ -10,7 +10,7 @@ pytest:
 	docker-compose run --entrypoint="" kopfmysql pytest -v
 
 wait-mysql:
-	docker-compose run --entrypoint="" kopfmysql wait-for-it mysql:3306
+	docker-compose run --entrypoint="" kopfmysql wait-for-it mysql:3306 -t 30
 
 run-mysql:
 	docker-compose up -d mysql
