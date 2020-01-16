@@ -19,4 +19,5 @@ metadata:
 spec:
   service: "mysql"
   secret: "mysql-wp.gowno.space"
+  autocreate: true
 ---
