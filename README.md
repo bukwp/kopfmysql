@@ -1,4 +1,5 @@
 # kopfmysql
+[![Docker Repository on Quay](https://quay.io/repository/bukowwp/kopfmysql/status "Docker Repository on Quay")](https://quay.io/repository/bukowwp/kopfmysql)
 ```yaml
 apiVersion: v1
 kind: Secret
