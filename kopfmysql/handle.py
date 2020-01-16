@@ -53,7 +53,8 @@ def main(body, meta, spec, status, **kwargs):
     except MysqlError as exc:
         kopf.exception(body, reason="ERROR", exc=exc)
         if exc.errno == CR_CONN_HOST_ERROR:
-            raise kopf.TemporaryError(exc.__repr__(), delay=15)
+            # todo no retries happen
+            raise kopf.TemporaryError(exc.__repr__(), delay=5)
         else:
             raise kopf.PermanentError(exc.__repr__())
     except Exception as exc:
