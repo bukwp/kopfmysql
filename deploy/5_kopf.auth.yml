@@ -1,0 +1,121 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  namespace: "wordpress"
+  name: "bukwp-kopfmysql-serviceaccount"
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: "bukwp-kopfmysql-clusterrole"
+rules:
+  - apiGroups: [bukwp.kopfmysql]
+    resources: [accounts]
+    verbs: [list, watch]
+  - apiGroups: [zalando.org]
+    resources: [clusterkopfpeerings]
+    verbs: [list, watch, patch, get]
+  - apiGroups: [apiextensions.k8s.io]
+    resources: [customresourcedefinitions]
+    verbs: [list, get]
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: Role
+metadata:
+  name: "bukwp-kopfmysql-role"
+  namespace: "wordpress"
+rules:
+  - apiGroups: [bukwp.kopfmysql]
+    resources: [accounts]
+    verbs: [get, list, watch, patch]
+  - apiGroups: [""]
+    resources: [secrets]
+    verbs: [get]
+  - apiGroups: [zalando.org]
+    resources: [kopfpeerings]
+    verbs: [list, watch, patch, get]
+  - apiGroups: [events.k8s.io]
+    resources: [events]
+    verbs: [create]
+  - apiGroups: [""]
+    resources: [events]
+    verbs: [create]
+  # Framework: knowing which other operators are running (i.e. peering).
+  - apiGroups: [bukwp.kopfmysql]
+    resources: [kopfpeerings]
+    verbs: [list, watch, patch, get]
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: RoleBinding
+metadata:
+  name: "bukwp-kopfmysql-rolebinding"
+  namespace: "wordpress"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: "bukwp-kopfmysql-role"
+subjects:
+  - kind: ServiceAccount
+    name: "bukwp-kopfmysql-serviceaccount"
+    namespace: "wordpress"
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: "bukwp-kopfmysql-rolebinding-cluster"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: "bukwp-kopfmysql-clusterrole"
+subjects:
+  - kind: ServiceAccount
+    name: "bukwp-kopfmysql-serviceaccount"
+    namespace: "wordpress"
+#apiVersion: rbac.authorization.k8s.io/v1beta1
+#kind: Role
+#metadata:
+#  namespace: kopfmysql
+#  name: kopfexample-role-namespaced
+#rules:
+#
+#  # Framework: knowing which other operators are running (i.e. peering).
+#  - apiGroups: [bukwp.kopfmysql]
+#    resources: [kopfpeerings]
+#    verbs: [list, watch, patch, get]
+#
+#  # Framework: posting the events about the handlers progress/errors.
+#  - apiGroups: [events.k8s.io]
+#    resources: [events]
+#    verbs: [create]
+#  - apiGroups: [""]
+#    resources: [events]
+#    verbs: [create]
+#
+#  # Application: watching & handling for the custom resource we declare.
+#  - apiGroups: [bukwp.kopfmysql]
+#    resources: [accounts]
+#    verbs: [list, watch, patch]
+#
+#  # Application: other resources it produces and manipulates.
+#  # Here, we create Jobs+PVCs+Pods, but we do not patch/update/delete them ever.
+#  - apiGroups: [batch, extensions]
+#    resources: [jobs]
+#    verbs: [create]
+#  - apiGroups: [""]
+#    resources: [pods, persistentvolumeclaims]
+#    verbs: [create]
+
+#---
+#apiVersion: rbac.authorization.k8s.io/v1beta1
+#kind: RoleBinding
+#metadata:
+#  namespace: kopfmysql
+#  name: kopfexample-rolebinding-namespaced
+#roleRef:
+#  apiGroup: rbac.authorization.k8s.io
+#  kind: Role
+#  name: kopfexample-role-namespaced
+#subjects:
+#  - kind: ServiceAccount
+#    name: bukwp.kopfmysql
+#---

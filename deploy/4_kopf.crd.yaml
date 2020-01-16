@@ -1,0 +1,31 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: accounts.bukwp.kopfmysql
+spec:
+  scope: Namespaced
+  group: bukwp.kopfmysql
+  names:
+    plural: accounts
+    singular: account
+    kind: Account
+    shortNames:
+      - acc
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                service:
+                  type: string
+                secret:
+                  type: string
+              required:
+                - service
+                - secret
