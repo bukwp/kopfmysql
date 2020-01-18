@@ -20,4 +20,4 @@ class ErrorsTestCase(TestCase):
             self.assertEqual(errno, exc.exception.args[0]['errno'])
             self.assertEqual("bad", exc.exception.args[0]['msg'])
             self.assertEqual("BADsqlstate", exc.exception.args[0]['sqlstate'])
-            self.assertEqual(ERRORS_DICT.get(errno, None), exc.exception.args[0]['errcode'])
+            self.assertEqual(ERRORS_DICT["errno"], exc.exception.args[0]['errcode'])
