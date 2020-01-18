@@ -14,4 +14,3 @@ services:
     image: quay.io/bukowwp/mysql
     environment:
       MYSQL_ROOT_PASSWORD: password
-    command: --default-authentication-plugin=mysql_native_password

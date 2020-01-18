@@ -1,0 +1,69 @@
+import random
+import string
+from base64 import b64encode
+from unittest import TestCase
+
+import kubernetes.client.models
+
+from .handler__test import HandlerTestMixin
+from .handler_accounts import AccountHandler
+
+
+class TestAccountsHandler(HandlerTestMixin, TestCase):
+
+    def setUp(self) -> None:
+        self.data = dict(
+            user=random_string(),
+            password=random_string(),
+            database=random_string(),
+            auth_plugin="caching_sha2_password",
+        )
+        super().setUp()
+
+    def test_from_secret(self):
+        bstring = random_string()
+        bbyte = bstring.encode('utf-8')
+        b64byte = b64encode(bbyte)
+        auth_plugin_str = "caching_sha2_password"
+        auth_plugin_b64 = b64encode(b"caching_sha2_password")
+
+        data = dict(
+            user=b64byte,
+            password=b64byte,
+            database=b64byte,
+            auth_plugin=auth_plugin_b64,
+        )
+
+        handler = AccountHandler.from_V1Secret(
+            connection_handler=self.connection_handler,
+            secret=kubernetes.client.models.V1Secret(data=data),
+        )
+
+        self.assertEqual(bstring, handler.password)
+        self.assertEqual(bstring, handler.database)
+        self.assertEqual(bstring, handler.user)
+
+        handler.create_user()
+        handler.create_database()
+        handler.grant_permissions()
+
+        self.connection_handler.user = bstring
+        self.connection_handler.password = bstring
+        self.connection_handler.auth_plugin = auth_plugin_str
+
+        with self.connection_handler.execute("SHOW DATABASES;") as c:
+            databases = [r[0] for r in c]
+            self.assertEqual(2, len(databases))
+
+
+TABLE = (
+    "CREATE TABLE `test` ("
+    "  `a` int(11) NOT NULL,"
+    "  `b` char(4) NOT NULL,"
+    "  `c` date NOT NULL,"
+    "  `d` date NOT NULL"
+    ")"
+)
+
+def random_string(k=30) -> str:
+    return ''.join(random.choices(string.ascii_letters, k=k))

@@ -7,7 +7,7 @@ metadata:
   name: "mysql-credentials"
   namespace: "wordpress"
 stringData:
-  login: "testaccount"
+  user: "testaccount"
   password: "testpassword"
   database: "testdatabase"
 ---

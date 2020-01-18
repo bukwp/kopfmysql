@@ -5,6 +5,10 @@ deploy:
 
 apply:
 	kubectl apply -f .
+
+delete:
+	kubectl delete -f .
+
 context:
 	kubectl config set-context --current --namespace=wordpress
 

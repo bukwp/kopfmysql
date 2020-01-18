@@ -4,7 +4,10 @@ metadata:
   name: accounts.bukwp.kopfmysql
 spec:
   scope: Namespaced
+  subresources:
+    status: {}
   group: bukwp.kopfmysql
+  preserveUnknownFields: true
   names:
     plural: accounts
     singular: account
@@ -26,6 +29,9 @@ spec:
                   type: string
                 secret:
                   type: string
+                auth_plugin:
+                  type: string
               required:
                 - service
                 - secret
+                - auth_plugin

@@ -5,17 +5,17 @@ from mysql.connector import errorcode
 from mysql.connector.errors import Error as MysqlError
 
 
-def handle_error(err: MysqlError):
+def handle_error(msg: str, err: MysqlError):
     kind = ERRORS.get(err.errno, None)
     if not kind:
-        raise kopf.PermanentError(repr_error(err))
-    raise kind(repr_error(err))
+        raise kopf.PermanentError(repr_error(msg, err))
+    raise kind(repr_error(msg, err))
 
-def repr_error(err: MysqlError):
+def repr_error(msg: str, err: MysqlError):
     return {
         "errno": err.errno,
         "errcode": ERRORS_DICT.get(err.errno, None),
-        "msg": err.msg,
+        "msg": msg,
         "sqlstate": err.sqlstate,
     }
 

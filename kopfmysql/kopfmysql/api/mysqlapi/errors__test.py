@@ -15,9 +15,9 @@ class ErrorsTestCase(TestCase):
                 sqlstate="BADsqlstate",
             )
             with self.assertRaises(kofp_exc) as exc:
-                handle_error(error)
+                handle_error("bad", error)
 
             self.assertEqual(errno, exc.exception.args[0]['errno'])
-            self.assertEqual("BADmsg", exc.exception.args[0]['msg'])
+            self.assertEqual("bad", exc.exception.args[0]['msg'])
             self.assertEqual("BADsqlstate", exc.exception.args[0]['sqlstate'])
             self.assertEqual(ERRORS_DICT.get(errno, None), exc.exception.args[0]['errcode'])

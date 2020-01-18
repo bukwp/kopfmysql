@@ -3,11 +3,10 @@ import os
 
 import kopf
 import kubernetes
-from mysql.connector.errorcode import CR_CONN_HOST_ERROR, ER_CANNOT_USER
 from mysql.connector.errors import Error as MysqlError
 
-from app.handler import AccountHandler
 from app.errors import handle_error
+from app.handler import AccountHandler
 
 VERSION = "v1alpha1"
 

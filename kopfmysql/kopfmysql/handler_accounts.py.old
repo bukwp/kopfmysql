@@ -1,0 +1,58 @@
+from base64 import b64decode
+from dataclasses import dataclass
+
+import kubernetes
+
+from .handler import ConnectionHandler
+
+
+@dataclass
+class AccountHandler:
+    connection_handler: ConnectionHandler
+
+    user: str
+    auth_plugin: str
+    password: str
+    database: str
+
+    CREATE_DATABASE: str = "CREATE DATABASE {database}"
+    GRANT_PERMISSIONS:str  = "GRANT ALL ON {database}.* TO '{user}'@'%'"
+    CREATE_USER: str = "CREATE USER '{user}'@'%' IDENTIFIED WITH {auth_plugin} BY '{password}'"
+
+    @classmethod
+    def _from_secret(cls, secret, key):
+        return b64decode(secret.data[key]).decode('utf-8')
+
+    @classmethod
+    def from_V1Secret(cls,
+                      connection_handler: ConnectionHandler,
+                      secret: kubernetes.client.models.V1Secret,
+                      ):
+        return cls(
+            connection_handler=connection_handler,
+            user=cls._from_secret(secret, "user"),
+            password=cls._from_secret(secret, "password"),
+            database=cls._from_secret(secret, "database"),
+            auth_plugin=cls._from_secret(secret, "auth_plugin"),
+        )
+
+    def create_database(self):
+        cmd = self.CREATE_DATABASE.format(
+            database=self.database
+        )
+        with self.connection_handler.execute(cmd): ...
+
+    def create_user(self):
+        cmd = self.CREATE_USER.format(
+            user=self.user,
+            password=self.password,
+            auth_plugin=self.auth_plugin,
+        )
+        with self.connection_handler.execute(cmd): ...
+
+    def grant_permissions(self):
+        cmd = self.GRANT_PERMISSIONS.format(
+            user=self.user,
+            database=self.database
+        )
+        with self.connection_handler.execute(cmd): ...

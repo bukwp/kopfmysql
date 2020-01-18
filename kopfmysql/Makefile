@@ -1,4 +1,4 @@
-test: run-mysql wait-mysql pytest
+test: build run-mysql wait-mysql pytest
 
 build:
 	docker-compose build
@@ -14,3 +14,6 @@ wait-mysql:
 
 run-mysql:
 	docker-compose up -d mysql
+
+run-mysql-local:
+	docker run -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=password quay.io/bukowwp/mysql
